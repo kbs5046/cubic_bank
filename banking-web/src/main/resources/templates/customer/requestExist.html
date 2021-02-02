@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Request was submitted</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  
+   <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<div th:insert="customer/buttons"></div>
+<div class="container">
+	<div style="width: 60%;">
+		On: 
+		<span th:utext=" ${customerRequestVO.doe}" style="font-weight: bold;"></span> 
+		<br> 
+	      Your Request was successfully Submitted to the Admin. Your request will be reviewed and approved by the admin. 
+	      Once your request is approved, you will receive an email with the delivery details.
+	      <br>
+	      Request No:
+	      <span th:utext=" ${customerRequestVO.refNumber}" style="font-weight: bold;"></span> 
+	</div> 
+</div>          
+</body>
+</html>

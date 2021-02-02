@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Customer Dashboard Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+  <script type="text/javascript">
+  $(document).ready(function(){
+	  $(".dropdown-toggle").dropdown();
+	});
+  </script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<header style="height: 30px;background-color: maroon;color:white;">
+  Hello Mr. <span th:utext="${session.userSessionVO.username}" th:unless="${session == null}" style="font-weight: bold;"></span>
+   
+</header>
+<div class="container">
+  <h2>Customer Dashboard Page
+  </h2>
+<!--   <span th:utext="${error}" style="color: red;font-size: 18px;font-weight: bold;"></span> -->
+<!--    <span th:utext="${message}" style="color: blue;font-size: 18px;font-weight: bold;"></span> -->
+  <hr/>
+   <a th:href="@{/customer/account/summary}">
+	<button type="button" class="btn btn-secondary">Account Summary </button>
+  </a>
+  <a th:href="@{/customer/payee/list}">
+	<button type="button" class="btn btn-primary">Manage Beneficiaries </button>
+  </a>
+  <a th:href="@{/customer/update/information}">
+	<button type="button" class="btn btn-secondary">Update Profile</button>
+  </a>
+ <a th:href="@{/customer/load/transaction}">
+	<button type="button" class="btn btn-primary">Fund Transfer</button>
+  </a>
+  <a th:href="@{/customer/raise/request}">
+	<button type="button" class="btn btn-primary">Raise Request</button>
+  </a>
+  
+<!--   <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Request -->
+<!--     <span class="caret"></span></button> -->
+<!--     <ul class="dropdown-menu" role="menu" aria-labelledby="menu1"> -->
+<!--       <li role="presentation"> -->
+<!--       <a role="menuitem" tabindex="-1" th:href="@{/customer/request/checkbook}">Check Book</a> -->
+<!--       </li> -->
+<!--       <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Credit Card</a></li> -->
+<!--       <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Loan</a></li> -->
+<!--     </ul> -->
+   <a th:href="@{/customer/logout}"> 
+	<button type="button" class="btn btn-warning">Logout</button>
+  </a>
+  <hr/>
+<!--   <img th:src="@{/images/customer_dashboard.jpg}" alt="page"/> -->
+  <div style="width: 70%">
+  </div>
+</div>
+
+</body>
+</html>

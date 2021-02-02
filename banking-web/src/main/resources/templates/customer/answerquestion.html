@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Answer Question Page</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  
+  <script type="text/javascript">
+  	function checKAnswers(){
+  		var answer1 = $("#securityQuestionAnswer1").val();
+  		var answer2 = $("#securityQuestionAnswer2").val();
+  		var username = $("#loginId").val();
+  		var jsonObj={loginid:username,securityQuestionAnswer1:answer1,securityQuestionAnswer2:answer2};
+  		
+  		const options = {
+  				method:"POST",
+  				body:JSON.stringify(jsonObj),
+  				headers:{
+  					'Content-Type': 'application/json',
+                    		'Accept': 'application/json'
+  				} 				
+  		}
+  		fetch('/v3/check/answers', options)
+  		.then(res => res.json())
+  		.then(data=>{
+  			if(data.code==200){
+  				$("#securityQuestionAnswer1").attr('readonly','readonly');
+  				$("#securityQuestionAnswer2").attr('readonly','readonly');
+  				$("#checkAnswer").hide();
+  				$("#newPassword").show();
+  				
+  				
+        		//submitting 
+      		   // $("#QuestionAnswerForm").submit();
+		 
+      		    //document.loginForm.submit();
+      		    //document.getElementById("loginForm").submit();
+        	 }
+        	 else{
+        		 if(data.code==400){
+        			 $("#securityQuestionAnswer1").focus();
+        			 $("#securityQuestionAnswer2").focus();
+        		 }
+        		 else if(data.code==401){
+        			 $("#securityQuestionAnswer1").focus();
+        		 }
+        		 else{
+        			 $("#securityQuestionAnswer2").focus();
+        		 }
+        		 $("#error").html(data.message); 
+        	 }
+  		});
+  	}
+  	
+  	function changePassword(){
+  		var newP = $("#newPassword1").val();
+  		var confirmP = $("#confirmPassword").val();
+  		var regx = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  		if(newP.localeCompare(confirmP) == 0){
+  			if(regx.test(newP)){
+  				$("#newPasswordForm").submit();
+  			}
+  			else{
+  				$("#error").html("Password must contain at least 8 characters, at least a number, at least a special character , both upper and lower case letters");
+  				$("#newPassword1").focus();
+  			}
+  		}
+  		else{
+  			$("#error").html("Passwords do not match");
+  		} 		
+  	}
+  	
+  	function messageClear(){
+  	  $("#error").html("");
+     }
+  </script>
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<header style="height: 30px;background-color: maroon;">
+</header>
+<div class="container">
+  <h2>Please answer your security questions
+  </h2>
+  <img th:src="@{/images/login.png}" alt="Logo" style="height: 140px"/>
+   <br/>
+       <span th:utext="${message}" id = "error"style="color: red;font-size: 18px;font-weight: bold;"></span> 
+  <div style="width: 70%">
+   <form th:action="@{/customer/check/answers}" method="POST" id="QuestionAnswerForm">
+    <div class="form-group">
+      <input type="hidden" th:value="${queAnsVO.loginid}" name="loginId" id="loginId"/>
+      <label th:text = "${queAnsVO.securityQuestion1}"></label>
+      <input type="text" style="width: 60%;" class="form-control"  name="securityQuestionAnswer1" id="securityQuestionAnswer1" onkeyup="messageClear();">
+      <label th:text = "${queAnsVO.securityQuestion2}"></label>
+      <input type="text" style="width: 60%;" class="form-control"  name="securityQuestionAnswer2" id="securityQuestionAnswer2" onkeyup="messageClear();">
+      
+    </div>
+    <button type="button" class="btn btn-primary" id="checkAnswer" onclick="checKAnswers();">Reset Password</button>
+  </form>
+  </div>
+  
+  <div style="width: 70%;display: none" id="newPassword">
+  <p>Password must contain {at least 8 characters, at least a number, at least a special character , both upper and lower case letters}</p>
+   <form th:action="@{/customer/update/password}" method="post" id="newPasswordForm">
+    <div class="form-group">
+	<input type="hidden" th:value="${queAnsVO.loginid}" name="loginid" id="loginId1"/>
+    <b>New Password*</b>
+    <input type="password" style="width: 60%;" class="form-control"  name="newPassword" id="newPassword1" onkeyup="messageClear();">
+    <b>Confirm*</b>
+    <input type="password" style="width: 60%;" class="form-control"  name="confirmPassword" id="confirmPassword" onkeyup="messageClear();">
+    	      
+    </div>
+    <button type="button" class="btn btn-primary" onclick="changePassword();">Save</button>
+  </form>
+  </div>
+</div>
+<footer  class="ffooter">
+</footer>
+
+</body>
+</html>

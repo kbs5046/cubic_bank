@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Customer Request Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<div th:insert="customer/buttons"></div>
+<div class="container">
+	<span th:utext="${message}" id="message" style="color: red;font-size: 18px;font-weight: bold;"></span>
+ 	<table>
+ 		<tr th:each="request: ${requestTypeVOs}">
+ 			<td>
+ 				<a th:href="@{'/customer/select/request?reauestId='+${request.id}}">
+ 					<span th:text="${request.description}"></span>
+ 				</a>
+ 			</td>		
+ 		</tr>
+ 	
+ 	</table>
+  	<img th:src="@{/images/customer_dashboard.jpg}" alt="page"/>
+</div>
+<footer  class="ffooter">
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Manage beneficiary page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  
+   
+  <script type="text/javascript">
+  $(document).ready(function() {
+	    $('#accountList').DataTable();
+	} );
+  
+  function deletePayee(pid){
+	  messageClear();
+	  const options = {
+              method: 'DELETE',
+              body: 'id',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+            };
+	  
+	  fetch('/v3/remove/payee/'+pid,options)
+	  .then(resp=>resp.json())
+	  .then(data=>{
+		  if(data.code==200){
+			  $('#row_'+pid).hide();
+			  $("#message").html(data.message);
+		  }
+		  else{
+			  $("#error").html(data.message);
+		  }
+	  });
+
+  }
+  
+  function messageClear(){
+	   $("#error").html("");
+	  $("#message").html("");
+   }
+  </script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<div th:insert="customer/buttons"></div>
+<div class="container">
+   <h3>Beneficiary List</h3>
+   <hr/>
+   <span th:utext="${message}" id="message" style="color: blue;font-size: 18px;font-weight: bold;"></span>
+   <span th:utext="${error}"  id="error" style="color: red;font-size: 18px;font-weight: bold;"></span>
+  <div style="width: 100%">
+  
+    <table id="accountList" class="table table-striped table-bordered" style="width:100%">
+  <thead>
+  <tr>
+  <td> Name </td>
+  <td> NickName </td>
+  <td> Account No. </td>
+  <td> Remark </td>
+  <td> Action</td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="payeeInfoVO: ${payeeInfoVOs}" th:id="'row_'+${payeeInfoVO.id}">
+  	<td th:text="${payeeInfoVO.payeeName}"/>
+  	<td th:text="${payeeInfoVO.payeeNickName}"/>
+  	<td th:text="${payeeInfoVO.payeeAccountNo}"/>
+  	<td th:text="${payeeInfoVO.remarks}"/>
+  	<td>
+  	<div class="btn-group">
+	  	<form th:action="@{/customers/edit/payee}">
+	  	<button type="submit" th:name="id" th:value="${payeeInfoVO.id}" class="btn btn-info">Edit</button>
+	  	</form>
+	  	<form th:action="@{/customers/remove/payee}" th:method="post">
+	  	<button type="button" th:name="id" th:value="${payeeInfoVO.id}" class="btn btn-danger" th:onclick="|deletePayee(${payeeInfoVO.id})|">Remove</button>
+	  	</form>
+  	</div>  
+  	</td>
+  	
+  </tr>
+  </tbody>
+  </table>
+  
+  </div>
+  <hr/>
+    <a th:href="@{/customer/add/payee}">
+	<button type="button" class="btn btn-primary" onclick="messageClear();">Add Payee</button>
+  </a>
+</div>
+<footer  class="ffooter">
+</footer>
+
+</body>
+</html>

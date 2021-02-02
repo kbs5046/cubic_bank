@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Change profile info</title>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script>
+
+	var loadFile = function(event) {
+	var output = document.getElementById('output');
+	output.src = URL.createObjectURL(event.target.files[0]);
+	output.onload = function() {
+	URL.revokeObjectURL(output.src) // free memory
+	}
+	};
+	
+	function editName(){
+		messageClear();
+		var newName = prompt("Please enter your name", "");
+		if(newName.length == 0){
+			$("#error").html("Name can not be blank..");
+			$("#name").focus();
+		}
+		else{
+			$("#name").val(newName);
+		}
+	}
+	
+	function editMobile(){
+		messageClear();
+		var newVal = prompt("Please enter new mobile", "");
+		var numbers = /^[0-9]+$/;
+		if(newVal.length != 10 || !numbers.test(newVal)){
+			$("#error").html("Please Enter valid mobile number..");
+			$("#mobile").focus();
+		}
+		
+		else{
+			$("#mobile").val(newVal);
+		}
+		
+	}
+	
+	function editjobTitle(){
+		messageClear();
+		var newVal = prompt("Please enter new jobTitle", "");
+		if(newVal.length == 0){
+			$("#error").html("Job title can not be blank..");
+			$("#jobTitle").focus();
+		}
+		else{
+			$("#jobTitle").val(newVal);
+		}
+	}
+	
+	function editAnswer1(){
+		messageClear();
+		var q1;
+		var newVal
+		var id1 = $("#question1").val();
+		const options = {
+	              method: 'POST',
+	              body: 'id',
+	              headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	              }
+	            };
+		  
+		  fetch('/v3/sequirity/question/'+id1,options)
+		  .then(resp=>resp.json())
+		  .then(data=>{
+			  q1 = data.questions;
+			  newVal = prompt(q1, "");
+			  if(newVal.length == 0){
+					$("#error").html("Answer can not be blank..");
+					$("#answer1").focus();
+					return;
+				}
+			  else{
+				$("#answer1").val(newVal);
+			  }
+		  });
+
+	
+	}
+	
+	function editAnswer2(){
+		messageClear();
+		var id2 = $("#question2").val();
+		var q2;
+		var newVal;
+		const options = {
+	              method: 'POST',
+	              body: 'id',
+	              headers: {
+	                'Content-Type': 'application/json',
+	                'Accept': 'application/json'
+	              }
+	            };
+		  
+		  fetch('/v3/sequirity/question/'+id2,options)
+		  .then(resp=>resp.json())
+		  .then(data=>{
+			  q2 = data.questions;
+			  newVal = prompt(q2, "");
+			  if(newVal.length == 0){
+				$("#error").html("Answer can not be blank..");
+				$("#answer2").focus();
+			  }
+			  else{
+				$("#answer2").val(newVal);
+			  }
+		  });
+		
+	}
+	
+	function messageClear(){
+	 	   $("#error").html("");
+	 	  $("#message").html("");
+	}
+</script>
+
+</head>
+
+<body>
+<div th:insert="customer/buttons"></div>
+   
+    <div class="container">
+        <h3>My Profile</h3>
+        <br />
+         <span th:utext="${error}" id="error" style="color: red;font-size: 18px;font-weight: bold;"></span>
+  	   <span th:utext="${message}" id="message" style="color: blue;font-size: 18px;font-weight: bold;"></span>
+        <form action="#" method="post"  th:action="@{/customer/update/information}" th:object="${customerVO}">
+            <input type="hidden" th:field="*{accType}"/>
+             <input type="hidden" th:field="*{userid}"/>
+             <input type="hidden" th:field="*{id}"/>
+            <table class="table table-bordered" style="width: 100%;font-size: 16px;">
+               
+                <tr>
+                    <td>Name:</td>
+                    <td>
+	              <div class="input-group mb-3">
+  				<div class="input-group-prepend">
+	                    <input type="text" class="form-control" th:field="*{name}" id="name" readonly="readonly"/>
+	                    </div>
+	                    <button type="button" class="btn btn-link" onclick="editName();">change</button>
+                    </div>
+                     <td>Mobile:</td>
+                    <td>
+                    <div class="input-group mb-3">
+  				<div class="input-group-prepend">
+                     		<input type="text" class="form-control" th:field="*{mobile}" id="mobile" readonly="readonly"/>
+                     	</div>
+                        <button type="button" class="btn btn-link" onclick="editMobile();">change</button>
+                     </div>
+                    </td>
+                </tr>
+               <tr>
+                    <td>Email:</td>
+                    <td><input type="text" class="form-control" th:field="*{email}" readonly="readonly" /></td>
+                     <td>Job Title:</td>
+                    <td>
+                    <div class="input-group mb-3">
+  				<div class="input-group-prepend">
+                    		<input type="text" class="form-control" th:field="*{jobTitle}" id="jobTitle" readonly="readonly"/>
+                    	</div>
+                    	<button type="button" class="btn btn-link" onclick="editjobTitle();">change</button>
+                    </div>
+                    </td>
+                </tr>
+                
+                  <tr>
+                    <td>Address:</td>
+                    <td>
+                    <input type="text" class="form-control" th:field="*{address}" id="address"/>
+                     <td>SSN:</td>
+                    <td>
+                    <input type="text" class="form-control" th:field="*{ssn}" readonly="readonly"/>
+                    </td>
+                </tr>
+                
+                 <tr>
+                    <td>Qualification:</td>
+                     <td>
+                      <select  class="form-control" th:field="*{qualification}">
+                        <option value="B.TECH">B.TECH</option>
+                        <option value="BSC">BSC</option>
+                         <option value="M.TECH">M.TECH</option>
+                         <option value="MCA">MCA</option>
+                    </select>
+                     </td>               
+                    
+                </tr>
+                <tr>
+                    <td>Security Question 1</td>
+                    <td>
+                    	<select class="form-control" name="question1" id="question1">                	
+                    	<option th:each="questionsVO : ${questionsVOs}" th:value="${questionsVO.qid}" th:text="${questionsVO.questions}" th:selected="${questionsVO.questions==customerVO.question1}"></option>
+                    	</select>
+                    </td>
+                     <td>Security Question 1 Answer:</td>
+                    <td>
+                    <div class="input-group mb-3">
+  				<div class="input-group-prepend">
+                    		<input type="text" class="form-control" th:field="*{answer1}" id="answer1" readonly="readonly"/>
+                    	</div>
+                    	<button type="button" class="btn btn-link" onclick="editAnswer1();">change</button>
+                    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Security Question 2</td>
+                    <td>
+                    	<select class="form-control" name="question2" id="question2">                	
+                    	<option th:each="questionsVO : ${questionsVOs}" th:value="${questionsVO.qid}" th:text="${questionsVO.questions}" th:selected="${questionsVO.questions==customerVO.question2}"></option>
+                    	</select>
+                    </td>
+                     <td>Security Question 2 Answer:</td>
+                    <td>
+                    <div class="input-group mb-3">
+  				<div class="input-group-prepend">
+                    		<input type="text" class="form-control" th:field="*{answer2}" id="answer2" readonly="readonly"/>
+                    	</div>
+                    	<button type="button" class="btn btn-link" onclick="editAnswer2();">change</button>
+                    </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                	   <td>Upload Photo</td>
+                	   <td>
+                	   	<input type="file" class="form-control"  th:field="*{image}"onchange="loadFile(event)"style="width: 50%;background-color: #ecffde;height: 44px">
+				<img id="output" style="height: 200px; width:260px"/><span class="spinner-border spinner-border-sm"></span>
+                	   </td> 
+                	   <td>Photo name</td>  
+                	   <td>
+                	   	<input type="text" class="form-control" th:field="*{photoName}"/>
+                	   </td>
+                	     
+                </tr>
+                <tr>
+                 <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                    <td colspan="2">
+                    <button type="submit" class="btn btn-primary">Save/Submit</button>
+                     <a href="javascript:showRoles();"><img th:src="@{/images/roles.png}" class="img-responsive center-block" width="56"  alt="Logo" /></a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Fund Transfer page</title>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  
+   
+  <script type="text/javascript">
+  $(document).ready(function() {
+	    $('#enquiryList').DataTable();
+	} );
+  
+  function completeTransaction(){
+	  var payee = $("#payeeId").val();
+	  if(payee == "-Select-"){
+		  $("#error").html("Select Payee..");
+		  $("#payeeId").focus();
+		  return;
+	  }
+	  var amount = $("#amount").val();
+	  if(amount == 0){
+		  $("#error").html("Amount Can not be zero..");
+		  $("#amount").focus();
+		  return;
+	  }
+	  $("#FundTransferForm").submit();
+  }
+  function messageClear(){
+	   $("#error").html("");
+	  $("#message").html("");
+   }
+  </script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<div th:insert="customer/buttons"></div>
+<div class="container">
+   <h3>Choose Beneficiary</h3>
+   <hr/>
+   <span th:utext="${message}" style="color: blue;font-size: 18px;font-weight: bold;"></span>
+   <span th:utext="${error}" id="error" style="color: red;font-size: 18px;font-weight: bold;"></span>
+  <div style="width: 100%">
+  	<form th:action="@{/customer/fund/transfer}" method="POST" th:object="${TransactionVO}" id="FundTransferForm">
+  	<div class="form-group">
+	     <select class="form-control" style="width: 60%;" name="payeeId" id="payeeId" onkeyup="messageClear();">
+	     	  <option id="emptyId">-Select-</option>             	
+              <option th:each="payeeInfoVO: ${payeeInfoVOs}" th:value="${payeeInfoVO.id}" th:text="${payeeInfoVO.payeeNickName}" th:id="'payee_'+${payeeInfoVO.id}"></option>
+            </select>
+    	</div>
+    	
+    	<div class="form-group">
+	      <label for="amount">Amount:</label>
+	      <input type="text" style="width: 60%;" name="amount"  class="form-control" placeholder="amount" id="amount" onkeyup="messageClear();">
+    </div>
+    
+    <div class="form-group">
+      <label for="reason">Reason:</label>
+      <input type="text" style="width: 60%;" name="reason"  class="form-control" id="reason" onkeyup="messageClear();">
+    </div>
+  	
+  	<button type="button" class="btn btn-primary" onclick="completeTransaction();">Complete Transaction</button>
+  	<button type="reset" class="btn btn-danger">Reset</button>
+  	</form>
+  
+    
+  </div>
+</div>
+</body>
+</html>

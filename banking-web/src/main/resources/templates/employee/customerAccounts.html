@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Pending accounts page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  
+   
+  <script type="text/javascript">
+  $(document).ready(function() {
+	    $('#enquiryList').DataTable();
+	} );
+  </script>
+  
+  <style>
+.ffooter {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+  height: 30px;
+  background-color:#e9ffe7;
+}
+</style>
+</head>
+<body>
+<div th:insert="employee/employeeButtons"></div>
+   <span th:utext="${error}" style="color: red;font-size: 18px;"></span>
+   <hr/>
+   
+   <h1>Customer Account Pending</h1>
+   <hr/>
+  <div style="width: 100%">
+  
+    <table id="accountList" class="table table-striped table-bordered" style="width:100%">
+  <thead>
+  <tr>
+  <td> Name </td>
+  <td> Email </td>
+  <td> Mobile </td>
+  <td> Address </td>
+  <td> SSN </td>
+  <td> Qualification </td>
+  <td> Action</td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="account: ${accounts}">
+  	<td th:text="${account.name}"/>
+  	<td th:text="${account.email}"/>
+  	<td th:text="${account.mobile}"/>
+  	<td th:text="${account.address}"/>
+  	<td th:text="${account.ssn}"/>
+  	<td th:text="${account.qualification}"/>
+  	<td>
+<!--   	<form th:action="@{/customers/account/create(branch = ${account.address},customerId = $(account.userid))}" th:method="post"> -->
+  	<form th:action="@{/customers/account/create}" th:method="post">
+  	<button type="submit" th:name="userid" th:value="${account.userid}" class="btn btn-success">Create</button>
+  	</form> 
+  	</td>
+  	
+  </tr>
+  </tbody>
+  </table>
+  
+  </div>
+<footer  class="ffooter">
+</footer>
+
+</body>
+</html>
